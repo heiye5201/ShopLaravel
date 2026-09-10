@@ -6,9 +6,7 @@ use App\Http\Controllers\LiquidTagsDemoController;
 use App\Http\Controllers\LiquidThemeDemoController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::view('/', 'liquid-index')->name('home');
 
 Route::get('/liquid-demo', LiquidDemoController::class)->name('liquid.demo');
 Route::get('/liquid-tags-demo', LiquidTagsDemoController::class)->name('liquid.tags-demo');
