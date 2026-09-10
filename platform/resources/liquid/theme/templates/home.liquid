@@ -1,0 +1,39 @@
+{% extends 'theme/layouts/theme' %}
+
+{% block content %}
+    <section class="hero">
+        <div>
+            <div class="eyebrow">Liquid Theme Architecture</div>
+            <h1>{{ page.title | escape }}</h1>
+        </div>
+        <p class="lead">{{ page.description | escape }}</p>
+    </section>
+
+    <section class="products">
+        {% for product in products %}
+            {% include 'theme/snippets/product_card' %}
+        {% endfor %}
+    </section>
+
+    <section class="architecture">
+        <h2>主题目录结构</h2>
+        <pre class="tree">resources/liquid/theme/
+├── layouts/_theme.liquid          ← 页面公共骨架
+├── templates/home.liquid          ← 首页内容
+├── templates/product.liquid       ← 详情页内容
+├── partials/_header.liquid        ← 全站页头
+├── partials/_footer.liquid        ← 全站页尾
+└── snippets/_product_card.liquid  ← 循环复用的商品卡片</pre>
+    </section>
+
+    <section class="architecture">
+        <h2>核心 Liquid 写法</h2>
+        <pre class="tree"><code>{% raw %}{% extends 'theme/layouts/theme' %}
+
+{% block content %}
+  {% for product in products %}
+    {% include 'theme/snippets/product_card' %}
+  {% endfor %}
+{% endblock %}{% endraw %}</code></pre>
+    </section>
+{% endblock %}

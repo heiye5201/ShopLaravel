@@ -1,0 +1,29 @@
+{% extends 'theme/layouts/theme' %}
+
+{% block content %}
+    <article class="product-detail">
+        <img
+            src="{{ product.image | image_url: 900, 900, 'crop' | escape }}"
+            alt="{{ product.title | escape }}"
+        >
+        <div class="product-detail__body">
+            <span class="badge">{{ product.badge | escape }}</span>
+            <h1>{{ product.title | escape }}</h1>
+            <p>{{ product.description | escape }}</p>
+            <span class="price">{{ product.price | money: 'CNY', 'zh_CN' | escape }}</span>
+        </div>
+    </article>
+
+    <section class="architecture">
+        <h2>这个页面复用了什么？</h2>
+        <pre class="tree"><code>{% raw %}{% extends 'theme/layouts/theme' %}
+
+{% block content %}
+  商品详情自己的内容
+{% endblock %}
+
+同一个 Layout 自动提供：
+  {% include 'theme/partials/header' %}
+  {% include 'theme/partials/footer' %}{% endraw %}</code></pre>
+    </section>
+{% endblock %}

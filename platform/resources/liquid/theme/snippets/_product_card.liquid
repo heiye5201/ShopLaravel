@@ -1,0 +1,12 @@
+<article class="product-card">
+    <img
+        src="{{ product.image | image_url: 720, 420, 'crop' | escape }}"
+        alt="{{ product.title | escape }}"
+    >
+    <div class="product-card__body">
+        <span class="badge">{{ product.badge | escape }}</span>
+        <h2><a href="{{ product.url | escape }}">{{ product.title | escape }}</a></h2>
+        <p>{{ product.description | escape }}</p>
+        <span class="price">{{ product.price | money: 'CNY', 'zh_CN' | escape }}</span>
+    </div>
+</article>

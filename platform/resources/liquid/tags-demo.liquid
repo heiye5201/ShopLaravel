@@ -1,0 +1,66 @@
+{% extends 'demo/layouts/base' %}
+
+{% block title %}Liquid 标签演示{% endblock %}
+
+{% block styles %}
+        body { margin: 0; background: radial-gradient(circle at top, #17375e, #08111f 42rem); }
+        main { width: min(920px, calc(100% - 32px)); margin: 0 auto; padding: 56px 0; }
+        h1 { margin-bottom: 8px; font-size: clamp(2rem, 6vw, 4rem); }
+        .lead, .note { color: #a8b7cc; line-height: 1.7; }
+        .demo-panel { margin-top: 24px; padding: 24px; border: 1px solid #2f4d70; border-radius: 18px; background: rgba(10, 25, 44, .85); }
+        .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; padding: 0; list-style: none; }
+        .products li { padding: 16px; border-radius: 12px; }
+        .tone-a { background: #123955; }
+        .tone-b { background: #27345c; }
+        code { color: #67e8f9; }
+{% endblock %}
+
+{% block content %}
+<main>
+    {% assign demo_title = 'Liquid Tags Demo' %}
+    {% capture welcome_message %}欢迎来到 {{ shop.name | escape }}{% endcapture %}
+
+    <h1>{{ demo_title | upcase }}</h1>
+    <p class="lead">{{ welcome_message }}</p>
+
+    {% panel %}
+        <h2>条件标签：if / case / unless</h2>
+
+        {% if campaign.status == 'active' %}
+            <p>促销进行中：全场 {{ campaign.discount }}% 优惠。</p>
+        {% else %}
+            <p>当前没有促销活动。</p>
+        {% endif %}
+
+        {% case campaign.status %}
+            {% when 'active' %}<p>活动状态：进行中</p>
+            {% when 'paused' %}<p>活动状态：已暂停</p>
+            {% else %}<p>活动状态：未开始</p>
+        {% endcase %}
+
+        {% unless customer.vip %}
+            <p class="note">注册 VIP 后可以获得额外权益。</p>
+        {% endunless %}
+    {% endpanel %}
+
+    {% panel %}
+        <h2>循环标签：for / cycle</h2>
+        <p class="note"><code>limit: 2</code> 让模板只展示前两个商品。</p>
+        <ul class="products">
+            {% for product in products limit: 2 %}
+                <li class="{% cycle 'tone-a', 'tone-b' %}">
+                    {{ forloop.index }}. {{ product.title | escape }} · {{ product.price | escape }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endpanel %}
+
+    {% panel %}
+        <h2>自定义块标签</h2>
+        <p class="note">
+            本段外层由继承 <code>Liquid\\AbstractBlock</code> 的
+            <code>{% raw %}{% panel %}...{% endpanel %}{% endraw %}</code> 渲染。
+        </p>
+    {% endpanel %}
+</main>
+{% endblock %}

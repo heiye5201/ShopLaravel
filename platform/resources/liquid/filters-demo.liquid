@@ -1,0 +1,71 @@
+{% extends 'demo/layouts/base' %}
+
+{% block title %}{{ 'liquid_filters.page_title' | translate | escape }}{% endblock %}
+
+{% block styles %}
+        body { min-height: 100vh; margin: 0; background: radial-gradient(circle at 15% 0, #17375e, transparent 34rem), #07111f; }
+        main { width: min(1100px, calc(100% - 32px)); margin: 0 auto; padding: 56px 0 80px; }
+        header { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 34px; }
+        h1 { margin: 0 0 12px; font-size: clamp(2rem, 5vw, 4rem); }
+        .lead, .label { color: #9eb0c7; }
+        .lead { max-width: 720px; margin: 0; line-height: 1.7; }
+        .switch { flex: none; padding: 10px 14px; border: 1px solid #3b5c7c; border-radius: 999px; color: #99f6e4; text-decoration: none; }
+        .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+        .card { overflow: hidden; border: 1px solid #29425f; border-radius: 20px; background: rgba(10, 25, 44, .9); }
+        .content { padding: 24px; }
+        h2 { margin: 0 0 22px; color: #5eead4; font-size: 1.2rem; }
+        .row { margin-top: 17px; }
+        .label { display: block; margin-bottom: 7px; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+        code, .result { display: block; overflow-x: auto; padding: 12px 14px; border-radius: 10px; background: #050b14; color: #bfdbfe; white-space: nowrap; }
+        .result { color: #f8fafc; font-size: 1.1rem; font-weight: 700; }
+        .product-image { display: block; width: 100%; aspect-ratio: 12 / 7; object-fit: cover; background: #050b14; }
+        @media (max-width: 760px) { header { align-items: start; flex-direction: column; } .grid { grid-template-columns: 1fr; } }
+{% endblock %}
+
+{% block content %}
+<main>
+    <header>
+        <div>
+            <h1>{{ 'liquid_filters.page_title' | translate | escape }}</h1>
+            <p class="lead">{{ 'liquid_filters.page_description' | translate | escape }}</p>
+        </div>
+        {% if page.locale == 'en' %}
+            <a class="switch" href="?locale=zh_CN">{{ 'liquid_filters.switch_language' | translate | escape }}</a>
+        {% else %}
+            <a class="switch" href="?locale=en">{{ 'liquid_filters.switch_language' | translate | escape }}</a>
+        {% endif %}
+    </header>
+
+    <section class="grid">
+        <article class="card content">
+            <h2>01 · {{ 'liquid_filters.money' | translate | escape }}</h2>
+            <div class="row"><span class="label">{{ 'liquid_filters.raw_value' | translate }}</span><code>{{ product.price }}</code></div>
+            <div class="row"><span class="label">{{ 'liquid_filters.liquid_code' | translate }}</span><code>{% raw %}{{ product.price | money: page.currency, page.locale }}{% endraw %}</code></div>
+            <div class="row"><span class="label">{{ 'liquid_filters.result' | translate }}</span><span class="result">{{ product.price | money: page.currency, page.locale | escape }}</span></div>
+        </article>
+
+        <article class="card content">
+            <h2>02 · {{ 'liquid_filters.date' | translate | escape }}</h2>
+            <div class="row"><span class="label">{{ 'liquid_filters.raw_value' | translate }}</span><code>{{ product.published_at | escape }}</code></div>
+            <div class="row"><span class="label">{{ 'liquid_filters.liquid_code' | translate }}</span><code>{% raw %}{{ product.published_at | date_format: 'Y-m-d H:i', page.timezone }}{% endraw %}</code></div>
+            <div class="row"><span class="label">{{ 'liquid_filters.result' | translate }}</span><span class="result">{{ product.published_at | date_format: 'Y-m-d H:i', page.timezone }}</span></div>
+        </article>
+
+        <article class="card">
+            <img class="product-image" src="{{ product.image | image_url: 720, 420, 'crop' | escape }}" alt="{{ product.title | escape }}">
+            <div class="content">
+                <h2>03 · {{ 'liquid_filters.image' | translate | escape }}</h2>
+                <div class="row"><span class="label">{{ 'liquid_filters.raw_value' | translate }}</span><code>{{ product.image | escape }}</code></div>
+                <div class="row"><span class="label">{{ 'liquid_filters.liquid_code' | translate }}</span><code>{% raw %}{{ product.image | image_url: 720, 420, 'crop' }}{% endraw %}</code></div>
+            </div>
+        </article>
+
+        <article class="card content">
+            <h2>04 · {{ 'liquid_filters.translation' | translate | escape }}</h2>
+            <div class="row"><span class="label">{{ 'liquid_filters.raw_value' | translate }}</span><code>{{ product.translation_key | escape }}</code></div>
+            <div class="row"><span class="label">{{ 'liquid_filters.liquid_code' | translate }}</span><code>{% raw %}{{ product.translation_key | translate }}{% endraw %}</code></div>
+            <div class="row"><span class="label">{{ 'liquid_filters.result' | translate }}</span><span class="result">{{ product.translation_key | translate | escape }}</span></div>
+        </article>
+    </section>
+</main>
+{% endblock %}

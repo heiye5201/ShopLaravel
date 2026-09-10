@@ -1,0 +1,10 @@
+<header class="site-header">
+    <div class="shell">
+        <a class="brand" href="/liquid-theme-demo">{{ shop.name | escape }}</a>
+        <nav aria-label="主题导航">
+            {% for item in navigation %}
+                <a href="{{ item.url | escape }}">{{ item.title | escape }}</a>
+            {% endfor %}
+        </nav>
+    </div>
+</header>

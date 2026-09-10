@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="{{ page.locale | default: 'zh-CN' | escape }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Liquid Demo{% endblock %}</title>
+    <style>
+        :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: #07111f; color: #e8f0ff; }
+        * { box-sizing: border-box; }
+        .demo-navigation { position: relative; z-index: 10; border-bottom: 1px solid rgba(49, 80, 110, .7); background: rgba(7, 17, 31, .88); backdrop-filter: blur(16px); }
+        .demo-navigation__inner { display: flex; align-items: center; justify-content: space-between; width: min(1100px, calc(100% - 32px)); min-height: 64px; margin: 0 auto; gap: 20px; }
+        .demo-navigation__brand { color: #99f6e4; font-weight: 900; letter-spacing: .08em; text-decoration: none; text-transform: uppercase; }
+        .demo-navigation__links { display: flex; flex-wrap: wrap; gap: 6px; }
+        .demo-navigation__links a { padding: 7px 10px; border-radius: 999px; color: #9eb0c7; font-size: .86rem; text-decoration: none; }
+        .demo-navigation__links a:hover { background: #17375e; color: #fff; }
+        @media (max-width: 680px) { .demo-navigation__inner { align-items: start; flex-direction: column; padding: 14px 0; } }
+
+        {% block styles %}{% endblock %}
+    </style>
+</head>
+<body>
+    {% include 'demo/partials/navigation' %}
+    {% block content %}{% endblock %}
+</body>
+</html>
