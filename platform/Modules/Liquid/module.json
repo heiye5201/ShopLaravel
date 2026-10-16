@@ -1,0 +1,11 @@
+{
+    "name": "Liquid",
+    "alias": "liquid",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Liquid\\Providers\\LiquidServiceProvider"
+    ],
+    "files": []
+}

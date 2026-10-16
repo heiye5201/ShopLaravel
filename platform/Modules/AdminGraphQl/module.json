@@ -1,0 +1,11 @@
+{
+    "name": "AdminGraphQl",
+    "alias": "admingraphql",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\AdminGraphQl\\Providers\\AdminGraphQlServiceProvider"
+    ],
+    "files": []
+}

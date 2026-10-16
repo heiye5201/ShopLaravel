@@ -1,15 +1,17 @@
 <?php
 
-use App\Http\Controllers\LiquidDemoController;
-use App\Http\Controllers\LiquidFiltersDemoController;
-use App\Http\Controllers\LiquidTagsDemoController;
-use App\Http\Controllers\LiquidThemeDemoController;
+use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'liquid-index')->name('home');
+Route::redirect('/', '/liquid');
 
-Route::get('/liquid-demo', LiquidDemoController::class)->name('liquid.demo');
-Route::get('/liquid-tags-demo', LiquidTagsDemoController::class)->name('liquid.tags-demo');
-Route::get('/liquid-filters-demo', LiquidFiltersDemoController::class)->name('liquid.filters-demo');
-Route::get('/liquid-theme-demo', [LiquidThemeDemoController::class, 'home'])->name('liquid.theme-demo');
-Route::get('/liquid-theme-demo/product', [LiquidThemeDemoController::class, 'product'])->name('liquid.theme-demo.product');
+Route::prefix('api/v1/admin')->name('admin.')->group(function (): void {
+    Route::post('/register', [AdminController::class, 'register'])->name('register');
+    Route::post('/login', [AdminController::class, 'login'])->name('login');
+
+    Route::middleware('auth')->group(function (): void {
+        Route::post('/products', [AdminController::class, 'storeProduct'])->name('products.store');
+        Route::match(['put', 'patch'], '/products/{product}', [AdminController::class, 'updateProduct'])
+            ->name('products.update');
+    });
+});

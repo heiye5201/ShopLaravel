@@ -22,6 +22,8 @@ class ProductFactory extends Factory
             'slug' => fake()->unique()->slug(3),
             'price' => fake()->randomFloat(2, 99, 1999),
             'description' => fake()->sentence(),
+            'image_path' => '/images/aurora-speaker.svg',
+            'badge' => fake()->randomElement(['新品', '推荐', '热销']),
             'is_available' => true,
             'tags' => fake()->words(3),
         ];
