@@ -5,7 +5,7 @@ namespace Modules\Liquid\Tags;
 use Liquid\AbstractBlock;
 use Liquid\Context;
 
-final class TagPanel extends AbstractBlock
+class TagPanel extends AbstractBlock
 {
     public function render(Context $context): string
     {

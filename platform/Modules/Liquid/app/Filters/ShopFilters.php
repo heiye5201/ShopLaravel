@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Lang;
 use NumberFormatter;
 use Throwable;
 
-final class ShopFilters
+class ShopFilters
 {
     public function money(mixed $value, string $currency = 'CNY', ?string $locale = null): string
     {

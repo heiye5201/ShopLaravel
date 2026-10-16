@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 use Liquid\Template;
 use Modules\Liquid\Services\LiquidDemoPageService;
 
-final class LiquidThemeDemoController extends Controller
+class LiquidThemeDemoController extends Controller
 {
     public function __construct(private readonly LiquidDemoPageService $pages) {}
 

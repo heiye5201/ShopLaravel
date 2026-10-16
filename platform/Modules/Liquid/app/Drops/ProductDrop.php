@@ -6,7 +6,7 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use Liquid\Drop;
 
-final class ProductDrop extends Drop
+class ProductDrop extends Drop
 {
     public function __construct(private readonly Product $product) {}
 

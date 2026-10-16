@@ -5,7 +5,7 @@ namespace Modules\Liquid\Services;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-final class ArchitectureDocumentService
+class ArchitectureDocumentService
 {
     public function renderAdminGraphqlDataAccess(): string
     {

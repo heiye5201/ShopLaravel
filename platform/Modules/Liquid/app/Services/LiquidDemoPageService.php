@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\File;
 use Liquid\Template;
 use Modules\Liquid\Drops\ProductDrop;
 
-final class LiquidDemoPageService
+class LiquidDemoPageService
 {
     public function __construct(private readonly ProductRepositoryInterface $products) {}
 

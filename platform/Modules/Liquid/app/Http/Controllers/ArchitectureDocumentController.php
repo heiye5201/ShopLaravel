@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
 use Modules\Liquid\Services\ArchitectureDocumentService;
 
-final class ArchitectureDocumentController extends Controller
+class ArchitectureDocumentController extends Controller
 {
     public function __construct(private readonly ArchitectureDocumentService $documents) {}
 
