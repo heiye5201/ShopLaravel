@@ -6,9 +6,19 @@ use Tests\TestCase;
 
 class LiquidIndexTest extends TestCase
 {
-    public function test_root_redirects_to_the_liquid_home_page(): void
+    public function test_root_redirects_to_the_project_index_page(): void
     {
-        $this->get('/')->assertRedirect('/liquid');
+        $this->get('/')->assertRedirect('/index');
+    }
+
+    public function test_project_index_page_links_to_project_sections(): void
+    {
+        $this->get('/index')
+            ->assertOk()
+            ->assertSeeText('项目首页')
+            ->assertSee(url('/admin'), false)
+            ->assertSee(route('liquid.home'), false)
+            ->assertSee(route('liquid.theme-demo'), false);
     }
 
     public function test_home_page_links_to_every_liquid_demo(): void

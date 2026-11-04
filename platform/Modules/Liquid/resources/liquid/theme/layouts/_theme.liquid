@@ -36,6 +36,18 @@
         .product-detail__body { align-self: center; padding: clamp(28px, 5vw, 58px); }
         .product-detail h1 { margin: 18px 0; font-size: clamp(2.4rem, 5vw, 4.6rem); }
         .product-detail p { color: #a8b7cc; font-size: 1.1rem; line-height: 1.7; }
+        .product-detail__body { min-width: 0; }
+        .product-variants { margin-top: 30px; padding-top: 24px; border-top: 1px solid #29425f; }
+        .product-variants h2 { margin: 0 0 16px; font-size: 1rem; }
+        .product-variants__list { display: grid; gap: 10px; list-style: none; padding: 0; margin: 0; max-height: 420px; overflow-y: auto; }
+        .product-variant { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 15px; border: 1px solid #31506e; border-radius: 12px; background: #10243a; }
+        .product-variant strong { min-width: 0; overflow-wrap: anywhere; font-size: .9rem; }
+        .product-variant__details { display: grid; gap: 6px; text-align: right; flex-shrink: 0; }
+        .product-variant__price { color: #5eead4; font-weight: 700; font-size: .95rem; }
+        .product-variant__status { color: #99f6e4; font-size: .75rem; }
+        .product-variant--unavailable { background: #0c1b2c; border-color: #25374e; }
+        .product-variant--unavailable strong, .product-variant--unavailable .product-variant__price, .product-variant--unavailable .product-variant__status { color: #8794a7; }
+        .product-detail .product-variants__empty { font-size: .9rem; color: #8794a7; }
         .architecture { margin-top: 38px; padding: 24px; border: 1px solid #29425f; border-radius: 20px; background: #050b14; }
         .architecture h2 { margin-top: 0; }
         .tree { overflow-x: auto; margin: 0; color: #bfdbfe; line-height: 1.7; }
@@ -43,9 +55,18 @@
         .site-footer .shell { display: flex; justify-content: space-between; gap: 20px; padding: 30px 0; }
         @media (max-width: 780px) { .hero, .products, .product-detail { grid-template-columns: 1fr; } .site-header .shell, .site-footer .shell { align-items: start; flex-direction: column; padding: 18px 0; } nav { flex-wrap: wrap; } }
     </style>
+    {% if page_kind == 'product' %}
+    <link rel="stylesheet" href="/css/storefront-product.css">
+    <link rel="stylesheet" href="/css/advanced-offers.css">
+    <script src="/js/storefront-product.js" type="module"></script>
+    {% endif %}
 </head>
-<body>
+<body{% if page_kind == 'product' %} class="storefront-product"{% endif %}>
     {% include 'theme/partials/header' %}
+
+    {% unless page_kind == 'product' %}
+        {% include 'theme/partials/marketing' %}
+    {% endunless %}
 
     <main class="shell">
         {% block content %}{% endblock %}

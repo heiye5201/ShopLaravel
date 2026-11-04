@@ -3,6 +3,7 @@
 namespace Modules\Liquid\Tests\Feature;
 
 use App\Models\Product;
+use App\Models\ProductVariant;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Tests\TestCase;
 
@@ -64,9 +65,37 @@ class LiquidThemeDemoControllerTest extends TestCase
             ->assertSeeText('Liquid 首页')
             ->assertSeeText('商品详情')
             ->assertSeeText('Aurora 随行音箱')
-            ->assertSeeText('这个页面复用了什么？')
+            ->assertDontSeeText('选购组合')->assertDontSee('class="purchase-preview"', false)->assertSeeText('加入购物车')->assertDontSeeText('这个页面复用了什么？')
             ->assertSee('class="site-header"', false)
             ->assertSee('class="site-footer"', false)
             ->assertSee('class="product-detail"', false);
+    }
+
+    public function test_details_show_only_requested_products_variants_in_configured_order(): void
+    {
+        $product = Product::where('slug', 'aurora-studio-speaker')->firstOrFail();
+        ProductVariant::factory()->for($product)->create(['title' => '白色款', 'price' => '219.50', 'position' => 2]);
+        ProductVariant::factory()->for($product)->unavailable()->create(['title' => '黑色款', 'price' => '209.50', 'position' => 1]);
+        ProductVariant::factory()->for(Product::where('slug', 'aurora-speaker')->firstOrFail())->create(['title' => '其他商品的款式']);
+
+        $this->get(route('liquid.theme-demo.product', ['slug' => $product->slug]))->assertOk()
+            ->assertSeeText('款式（2）')->assertSeeTextInOrder(['黑色款', '209.50', '暂不可选', '白色款', '219.50', '可选'])
+            ->assertDontSeeText('其他商品的款式');
+    }
+
+    public function test_variants_escape_titles_and_respect_product_availability(): void
+    {
+        $product = Product::where('slug', 'aurora-speaker')->firstOrFail();
+        $product->update(['is_available' => false]);
+        ProductVariant::factory()->for($product)->create(['title' => '<script>alert(1)</script>', 'is_available' => true]);
+        $this->get(route('liquid.theme-demo.product'))->assertOk()
+            ->assertSee('&lt;script&gt;alert(1)&lt;/script&gt;', false)
+            ->assertDontSee('<script>alert(1)</script>', false)->assertSeeText('暂不可选');
+    }
+
+    public function test_details_without_variants_show_empty_state(): void
+    {
+        $this->get(route('liquid.theme-demo.product'))->assertOk()
+            ->assertSeeText('款式（0）')->assertSeeText('暂无可展示的款式。');
     }
 }

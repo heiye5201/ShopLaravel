@@ -1,29 +1,46 @@
 {% extends 'theme/layouts/theme' %}
 
 {% block content %}
-    <article class="product-detail">
-        <img
-            src="{{ product.image | image_url: 900, 900, 'crop' | escape }}"
-            alt="{{ product.title | escape }}"
-        >
+    <article class="product-detail" data-product-detail>
+        <div class="product-gallery">
+            <div class="product-image-placeholder" data-image-placeholder role="img" aria-label="暂无商品图片">
+                <svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="78"/><circle cx="122" cy="75" r="14" fill="currentColor" stroke="none"/><path d="m38 144 43-43 38 38 17-17 28 29"/></svg>
+            </div>
+            {% if product.image != nil and product.image != '' %}
+            <img data-product-image src="{{ product.image | image_url: 1100, 1100, 'contain' | escape }}" alt="{{ product.title | escape }}">
+            {% endif %}
+        </div>
         <div class="product-detail__body">
-            <span class="badge">{{ product.badge | escape }}</span>
+            {% if product.badge != nil and product.badge != '' %}<span class="badge">{{ product.badge | escape }}</span>{% endif %}
             <h1>{{ product.title | escape }}</h1>
-            <p>{{ product.description | escape }}</p>
-            <span class="price">{{ product.price | money: 'CNY', 'zh_CN' | escape }}</span>
+            <p class="product-description">{{ product.description | escape }}</p>
+            <div class="product-price-line"><span class="price" data-unit-price>{{ product.price | money: 'CNY', 'zh_CN' | escape }}</span><span class="product-currency">CNY</span></div>
+            <section class="product-variants" aria-labelledby="variants-title">
+                <h2 id="variants-title">款式（{{ product.variants | size }}）</h2>
+                {% if product.variants.size > 0 %}
+                <div class="product-variants__list" role="group" aria-label="选择款式">
+                    {% for variant in product.variants %}
+                    <button type="button" class="product-variant{% unless variant.available %} product-variant--unavailable{% endunless %}" data-variant-id="{{ variant.id }}" data-price="{{ variant.price }}" data-title="{{ variant.title | escape }}" aria-pressed="false" {% unless variant.available %}disabled{% endunless %}>
+                        <span>{{ variant.title | escape }}</span>
+                        <span class="sr-only product-variant__price">{{ variant.price | money: 'CNY', 'zh_CN' | escape }}</span>
+                        <span class="product-variant__status">{% if variant.available %}<span class="sr-only">可选</span>{% else %}暂不可选{% endif %}</span>
+                    </button>
+                    {% endfor %}
+                </div>
+                {% else %}<p class="product-variants__empty">暂无可展示的款式。</p>{% endif %}
+            </section>
+            <section class="product-quantity" aria-labelledby="quantity-title">
+                <h2 id="quantity-title">数量 <span>Quantity</span></h2>
+                <div class="quantity-control"><button type="button" data-quantity-minus aria-label="减少数量" disabled>−</button><input data-quantity type="number" value="1" min="1" max="99" step="1" inputmode="numeric" aria-label="购买数量" disabled><button type="button" data-quantity-plus aria-label="增加数量" disabled>+</button></div>
+            </section>
+            <section data-advanced-offers hidden></section>
+            <script type="application/json" data-advanced-styles>{{ advanced_styles_json }}</script>
+            <div class="purchase-actions"><button class="add-to-cart" type="button" disabled>加入购物车 <span>暂未开放</span></button><button class="paypal-button" type="button" disabled>使用 <strong><i>Pay<span>Pal</span></i></strong> 支付 <small>暂未开放</small></button><p>购物车与在线支付暂未开放，当前可预览款式和金额。</p></div>
+            <noscript><p>请启用 JavaScript 以选择款式和预览选购金额。</p></noscript>
         </div>
     </article>
-
-    <section class="architecture">
-        <h2>这个页面复用了什么？</h2>
-        <pre class="tree"><code>{% raw %}{% extends 'theme/layouts/theme' %}
-
-{% block content %}
-  商品详情自己的内容
-{% endblock %}
-
-同一个 Layout 自动提供：
-  {% include 'theme/partials/header' %}
-  {% include 'theme/partials/footer' %}{% endraw %}</code></pre>
-    </section>
+    {% if product.content != nil and product.content != '' %}
+    <section class="product-content" aria-label="商品详情"><h2>商品详情</h2><div>{{ product.content }}</div></section>
+    {% endif %}
+    {% include 'theme/partials/marketing' %}
 {% endblock %}

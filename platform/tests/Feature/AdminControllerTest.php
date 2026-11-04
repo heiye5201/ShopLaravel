@@ -12,8 +12,11 @@ class AdminControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_an_admin_can_register_without_a_captcha(): void
+    public function test_an_admin_can_create_another_admin_without_switching_sessions(): void
     {
+        $admin = User::factory()->create();
+        $this->actingAs($admin);
+
         $response = $this->postJson('/api/v1/admin/register', [
             'name' => 'Shop Admin',
             'email' => 'admin@example.com',
@@ -29,12 +32,13 @@ class AdminControllerTest extends TestCase
 
         $user = User::query()->where('email', 'admin@example.com')->firstOrFail();
 
-        $this->assertAuthenticatedAs($user);
+        $this->assertAuthenticatedAs($admin);
         $this->assertTrue(Hash::check('password123', $user->password));
     }
 
     public function test_registration_input_is_validated(): void
     {
+        $this->actingAs(User::factory()->create());
         User::factory()->create(['email' => 'admin@example.com']);
 
         $this->postJson('/api/v1/admin/register', [

@@ -2,10 +2,16 @@
 
 namespace Modules\Liquid\Services;
 
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Repositories\Contracts\ProductRepositoryInterface;
+use App\Services\ProductContentSanitizer;
 use Illuminate\Support\Facades\File;
 use Liquid\Template;
+use Modules\Admin\Services\StorefrontAdvancedStyles;
+use Modules\Admin\Services\StorefrontCampaigns;
+use Modules\Admin\Services\StorefrontNavigation;
 use Modules\Liquid\Drops\ProductDrop;
 
 class LiquidDemoPageService
@@ -91,11 +97,21 @@ class LiquidDemoPageService
         ]);
     }
 
-    public function renderThemeProduct(Template $template): string
+    public function renderThemeCategory(Template $template, Category $category): string
     {
-        $product = $this->products->findBySlugOrFail('aurora-speaker');
+        return $this->renderTheme($template, 'home', [
+            'page' => ['title' => $category->name, 'description' => '浏览分类商品'],
+            'products' => $category->matchingProducts()->where('is_available', true)->orderBy('id')->get()
+                ->map(fn (Product $product): array => $this->toLiquidProduct($product))->all(),
+        ]);
+    }
+
+    public function renderThemeProduct(Template $template, ?string $slug = null): string
+    {
+        $product = $this->products->findBySlugOrFail($slug ?? 'aurora-speaker', ['variants']);
 
         return $this->renderTheme($template, 'product', [
+            'advanced_styles_json' => json_encode(config('admin.name') === 'Admin' ? app(StorefrontAdvancedStyles::class)->forProduct($product) : [], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR),
             'page' => [
                 'title' => '商品详情',
                 'description' => '这个详情页与主题首页继承同一个布局，并共享同一套页头和页尾。',
@@ -107,11 +123,15 @@ class LiquidDemoPageService
     private function renderTheme(Template $template, string $view, array $assigns): string
     {
         return $this->render($template, "theme/templates/{$view}.liquid", array_merge([
+            'page_kind' => $view,
+            'marketing_campaigns' => config('admin.name') === 'Admin'
+                ? app(StorefrontCampaigns::class)->forPage($view, $assigns['product']['id'] ?? null)
+                : [],
             'shop' => [
                 'name' => 'Aurora Objects',
                 'tagline' => '让日常用品拥有一点未来感。',
             ],
-            'navigation' => [
+            'navigation' => (config('admin.name') === 'Admin' ? app(StorefrontNavigation::class)->links() : null) ?? [
                 ['title' => 'Liquid 首页', 'url' => route('liquid.home')],
                 ['title' => '首页', 'url' => route('liquid.theme-demo')],
                 ['title' => '商品详情', 'url' => route('liquid.theme-demo.product')],
@@ -124,12 +144,22 @@ class LiquidDemoPageService
     private function toLiquidProduct(Product $product): array
     {
         return [
+            'id' => $product->id,
             'title' => $product->title,
             'description' => $product->description,
+            'content' => app(ProductContentSanitizer::class)->sanitize($product->content),
             'price' => (float) $product->price,
             'image' => $product->image_path,
             'badge' => $product->badge,
-            'url' => route('liquid.theme-demo.product'),
+            'variants' => $product->relationLoaded('variants')
+                ? $product->variants->map(fn (ProductVariant $variant): array => [
+                    'id' => $variant->id,
+                    'title' => $variant->title,
+                    'price' => (float) $variant->price,
+                    'available' => $product->is_available && $variant->is_available,
+                ])->values()->all()
+                : [],
+            'url' => route('liquid.theme-demo.product', ['slug' => $product->slug]),
         ];
     }
 

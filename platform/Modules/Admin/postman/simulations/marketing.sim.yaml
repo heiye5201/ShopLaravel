@@ -1,0 +1,5 @@
+simulation: marketing-ai
+routing: path
+mocks:
+  - routeKey: ai
+    path: ../mocks/chat/default.js

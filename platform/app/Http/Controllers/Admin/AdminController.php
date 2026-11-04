@@ -11,6 +11,7 @@ use App\Http\Resources\ProductResource;
 use App\Http\Resources\UserResource;
 use App\Models\Product;
 use App\Models\User;
+use App\Services\ProductWriter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -20,9 +21,6 @@ class AdminController extends Controller
     public function register(RegisterAdminRequest $request): JsonResponse
     {
         $user = User::create($request->validated());
-
-        Auth::login($user);
-        $request->session()->regenerate();
 
         return UserResource::make($user)
             ->additional(['message' => '注册成功'])
@@ -45,9 +43,9 @@ class AdminController extends Controller
             ->response();
     }
 
-    public function storeProduct(StoreProductRequest $request): JsonResponse
+    public function storeProduct(StoreProductRequest $request, ProductWriter $writer): JsonResponse
     {
-        $product = Product::create($request->validated());
+        $product = $writer->create($request->validated());
 
         return ProductResource::make($product)
             ->additional(['message' => '商品创建成功'])
@@ -55,11 +53,11 @@ class AdminController extends Controller
             ->setStatusCode(201);
     }
 
-    public function updateProduct(UpdateProductRequest $request, Product $product): JsonResponse
+    public function updateProduct(UpdateProductRequest $request, Product $product, ProductWriter $writer): JsonResponse
     {
-        $product->update($request->validated());
+        $product = $writer->update($product, $request->validated());
 
-        return ProductResource::make($product->refresh())
+        return ProductResource::make($product)
             ->additional(['message' => '商品更新成功'])
             ->response();
     }

@@ -18,6 +18,13 @@ class ProductVariant extends Model
         'price',
         'is_available',
         'position',
+        'sku',
+        'image_path',
+        'compare_at_price',
+        'track_inventory',
+        'inventory_quantity',
+        'continue_selling',
+        'option_values',
     ];
 
     public function product(): BelongsTo
@@ -29,6 +36,11 @@ class ProductVariant extends Model
     {
         return [
             'price' => 'decimal:2',
+            'compare_at_price' => 'decimal:2',
+            'track_inventory' => 'boolean',
+            'inventory_quantity' => 'integer',
+            'continue_selling' => 'boolean',
+            'option_values' => 'array',
             'is_available' => 'boolean',
             'position' => 'integer',
         ];

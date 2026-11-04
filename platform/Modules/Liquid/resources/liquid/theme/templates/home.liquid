@@ -28,12 +28,12 @@
 
     <section class="architecture">
         <h2>核心 Liquid 写法</h2>
-        <pre class="tree"><code>{% raw %}{% extends 'theme/layouts/theme' %}
+        <pre class="tree"><code>&#123;% extends 'theme/layouts/theme' %&#125;
 
-{% block content %}
-  {% for product in products %}
-    {% include 'theme/snippets/product_card' %}
-  {% endfor %}
-{% endblock %}{% endraw %}</code></pre>
+&#123;% block content %&#125;
+  &#123;% for product in products %&#125;
+    &#123;% include 'theme/snippets/product_card' %&#125;
+  &#123;% endfor %&#125;
+&#123;% endblock %&#125;</code></pre>
     </section>
 {% endblock %}

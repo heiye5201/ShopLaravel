@@ -14,6 +14,7 @@ Route::prefix('liquid')->name('liquid.')->group(function (): void {
     Route::get('/tags-demo', LiquidTagsDemoController::class)->name('tags-demo');
     Route::get('/filters-demo', LiquidFiltersDemoController::class)->name('filters-demo');
     Route::get('/theme-demo', [LiquidThemeDemoController::class, 'home'])->name('theme-demo');
+    Route::get('/theme-demo/category/{category}', [LiquidThemeDemoController::class, 'category'])->name('theme-demo.category');
     Route::get('/theme-demo/product', [LiquidThemeDemoController::class, 'product'])->name('theme-demo.product');
 
     Route::get(

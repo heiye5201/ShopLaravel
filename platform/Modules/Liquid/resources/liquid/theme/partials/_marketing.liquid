@@ -1,0 +1,23 @@
+{% if marketing_campaigns.size > 0 %}
+<style>
+.studio-offers{width:min(1120px,calc(100% - 32px));margin:30px auto 0;display:grid;gap:16px}.studio-offer{padding:28px;border-radius:18px;background:#f1ecff;color:#43325e;border:1px solid #d6c9fa}.studio-offer.mint{background:#e4f6ee;color:#224e40;border-color:#b6e0ca}.studio-offer.midnight{background:#1e2542;color:#f2edff;border-color:#4c547c}.studio-offer h2{margin:0 0 12px;font-size:24px}.studio-offer>p{margin:0 0 20px;line-height:1.8;white-space:pre-line;overflow-wrap:anywhere}.studio-offer-items{display:flex;flex-wrap:wrap;gap:12px}.studio-offer-item{flex:1 1 210px;background:#ffffff16;border:1px solid currentColor;border-radius:12px;padding:15px;display:flex;flex-direction:column;gap:10px;min-width:0;overflow-wrap:anywhere}.studio-offer-item a{font-size:13px;align-self:flex-start;text-underline-offset:4px}.studio-offer-item strong{font-size:15px}.studio-offer-label{font-size:11px;opacity:.7;margin-bottom:12px;display:block}
+</style>
+<div class="studio-offers" aria-label="精选活动">
+{% for offer in marketing_campaigns %}
+  <section class="studio-offer {{ offer.theme | escape }}">
+    <span class="studio-offer-label">精选推荐</span>
+    <h2>{{ offer.headline | escape }}</h2>
+    <p>{{ offer.body | escape }}</p>
+    <div class="studio-offer-items">
+    {% for item in offer.products %}
+      <article class="studio-offer-item">
+        <strong>{{ item.title | escape }}</strong>
+        <span>{{ item.price | money: 'CNY', 'zh_CN' | escape }}</span>
+        <a href="{{ item.url | escape }}">{{ offer.cta | escape }} →</a>
+      </article>
+    {% endfor %}
+    </div>
+  </section>
+{% endfor %}
+</div>
+{% endif %}
